@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 
-const TMDB_API_KEY = "cf8bd3310039c1de136305d6494ded87"
+const TMDB_API_KEY = process.env.TMDB_API_KEY || "cf8bd3310039c1de136305d6494ded87"
 const TMDB_ACCESS_TOKEN =
   "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZjhiZDMzMTAwMzljMWRlMTM2MzA1ZDY0OTRkZWQ4NyIsIm5iZiI6MTc0NDczMjAzNS4xNDgsInN1YiI6IjY3ZmU3ZjgzZWY1YWU2ODdjYmQ5NzBjNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EGvZN5huYJ-cnKerThI83IhNvfV65Ip9XcsGasPpAaw"
 

@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Trophy, Film, Trash2 } from "lucide-react"
+import { Trophy, Film, Trash2, SkipForward } from "lucide-react"
 import type { GuessHistoryEntry } from "./guess-history"
 
 interface StatsModalProps {
@@ -25,6 +25,8 @@ export function StatsModal({ score, history, playedMovies, onResetStats }: Stats
 
   const totalGuesses = history.length
   const correctGuesses = history.filter((entry) => entry.correct).length
+  const incorrectGuesses = totalGuesses - correctGuesses
+  const skippedGuesses = history.filter((entry) => entry.skipped).length
   const accuracy = totalGuesses > 0 ? Math.round((correctGuesses / totalGuesses) * 100) : 0
 
   const lastCorrectGuess = history.find((entry) => entry.correct)
@@ -78,8 +80,8 @@ export function StatsModal({ score, history, playedMovies, onResetStats }: Stats
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <div className="flex-1 bg-blue-50 p-3 rounded-lg flex items-start gap-3">
+        <div className="grid grid-cols-2 gap-2">
+          <div className="bg-blue-50 p-3 rounded-lg flex items-start gap-3">
             <Film className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-medium text-sm">Filmes jogados</p>
@@ -87,18 +89,26 @@ export function StatsModal({ score, history, playedMovies, onResetStats }: Stats
             </div>
           </div>
 
-          {lastCorrectGuess && (
-            <div className="flex-1 bg-green-50 p-3 rounded-lg flex items-start gap-3">
-              <Trophy className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium text-sm">Último acerto</p>
-                <p className="text-xs text-gray-600 line-clamp-2">
-                  <span className="font-medium">{lastCorrectGuess.movieTitle}</span>
-                </p>
-              </div>
+          <div className="bg-amber-50 p-3 rounded-lg flex items-start gap-3">
+            <SkipForward className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-medium text-sm">Filmes pulados</p>
+              <p className="text-2xl font-bold">{skippedGuesses}</p>
             </div>
-          )}
+          </div>
         </div>
+
+        {lastCorrectGuess && (
+          <div className="bg-green-50 p-3 rounded-lg flex items-start gap-3">
+            <Trophy className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-medium text-sm">Último acerto</p>
+              <p className="text-xs text-gray-600 line-clamp-2">
+                <span className="font-medium">{lastCorrectGuess.movieTitle}</span>
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="flex justify-between mt-4">
           <Button

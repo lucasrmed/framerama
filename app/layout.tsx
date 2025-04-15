@@ -3,12 +3,11 @@ import type { Metadata } from "next"
 import { Oswald } from "next/font/google"
 import "./globals.css"
 
-// Usando a fonte Oswald que combina bem com a estética do filme Old Boy
 const oswald = Oswald({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Filme Frame Game | Old Boy Edition",
-  description: "Adivinhe o filme a partir de frames/imagens - Inspirado na estética de Old Boy",
+  title: "Filme Frame Game",
+  description: "Adivinhe o filme a partir de frames/imagens",
     generator: 'v0.dev'
 }
 

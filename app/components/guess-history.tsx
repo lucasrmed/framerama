@@ -1,4 +1,4 @@
-import { CheckCircle2, XCircle } from "lucide-react"
+import { CheckCircle2, XCircle, SkipForward } from "lucide-react"
 
 export type GuessHistoryEntry = {
   movieId: number
@@ -6,6 +6,7 @@ export type GuessHistoryEntry = {
   guess: string
   correct: boolean
   timestamp: number
+  skipped?: boolean
 }
 
 interface GuessHistoryProps {
@@ -18,6 +19,7 @@ export function GuessHistory({ history }: GuessHistoryProps) {
   const totalGuesses = history.length
   const correctGuesses = history.filter((entry) => entry.correct).length
   const incorrectGuesses = totalGuesses - correctGuesses
+  const skippedGuesses = history.filter((entry) => entry.skipped).length
   const accuracy = totalGuesses > 0 ? Math.round((correctGuesses / totalGuesses) * 100) : 0
 
   return (
@@ -35,6 +37,11 @@ export function GuessHistory({ history }: GuessHistoryProps) {
           <span className="text-red-600">
             Erros: <strong>{incorrectGuesses}</strong>
           </span>
+          {skippedGuesses > 0 && (
+            <span className="text-amber-600">
+              Pulados: <strong>{skippedGuesses}</strong>
+            </span>
+          )}
         </div>
         <span>
           Precisão: <strong>{accuracy}%</strong>
@@ -47,17 +54,21 @@ export function GuessHistory({ history }: GuessHistoryProps) {
             key={entry.timestamp}
             className={`flex items-center justify-between p-2 text-sm ${
               index !== history.length - 1 ? "border-b" : ""
-            } ${entry.correct ? "bg-green-50" : ""}`}
+            } ${entry.correct ? "bg-green-50" : entry.skipped ? "bg-amber-50" : ""}`}
           >
             <div className="flex items-center gap-2">
               {entry.correct ? (
                 <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
+              ) : entry.skipped ? (
+                <SkipForward className="h-4 w-4 text-amber-500 flex-shrink-0" />
               ) : (
                 <XCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
               )}
               <span className="font-medium truncate">{entry.guess}</span>
             </div>
-            <span className="text-gray-500 text-xs truncate ml-2">{entry.correct ? "Acertou!" : "Errou"}</span>
+            <span className="text-gray-500 text-xs truncate ml-2">
+              {entry.correct ? "Acertou!" : entry.skipped ? "Pulado" : "Errou"}
+            </span>
           </div>
         ))}
       </div>

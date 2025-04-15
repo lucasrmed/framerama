@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
+import { AlertCircle, CheckCircle2, Loader2, SkipForward } from "lucide-react"
 import { GuessHistory, type GuessHistoryEntry } from "./components/guess-history"
 import { StatsModal } from "./components/stats-modal"
 import { SearchInput } from "./components/search-input"
@@ -32,6 +32,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [revealing, setRevealing] = useState(false)
   const [currentGuessMovie, setCurrentGuessMovie] = useState<Movie | null>(null)
+  const [wasSkipped, setWasSkipped] = useState(false)
 
   const [score, setScore] = useLocalStorage<number>("filmFrameGame_score", 0)
   const [guessHistory, setGuessHistory] = useLocalStorage<GuessHistoryEntry[]>("filmFrameGame_history", [])
@@ -49,10 +50,6 @@ export default function Home() {
         return ""
     }
   }
-
-  // Resto do código permanece o mesmo...
-
-  // Função fetchMovies e outras funções permanecem iguais
 
   const fetchMovies = async () => {
     setLoading(true)
@@ -75,7 +72,7 @@ export default function Home() {
         return
       }
 
-      const shuffledMovies = shuffleArray(data.movies)
+      const shuffledMovies = shuffleArray([...data.movies])
       setMovies(shuffledMovies)
 
       const selectedMovie = getUnplayedMovie(shuffledMovies)
@@ -95,10 +92,12 @@ export default function Home() {
 
     if (unplayedMovies.length === 0) {
       setPlayedMovies([])
-      return movieList[Math.floor(Math.random() * movieList.length)]
+      const reshuffledMovies = shuffleArray([...movieList])
+      return reshuffledMovies[0]
     }
 
-    return unplayedMovies[Math.floor(Math.random() * unplayedMovies.length)]
+    const shuffledUnplayed = shuffleArray([...unplayedMovies])
+    return shuffledUnplayed[0]
   }
 
   useEffect(() => {
@@ -133,6 +132,7 @@ export default function Home() {
       guess: guess,
       correct: isMatch,
       timestamp: Date.now(),
+      skipped: false,
     }
 
     setGuessHistory((prev) => [historyEntry, ...prev].slice(0, 20))
@@ -173,6 +173,7 @@ export default function Home() {
     setGameOver(false)
     setImageLoading(true)
     setRevealing(false)
+    setWasSkipped(false)
   }
 
   const resetStats = () => {
@@ -181,6 +182,29 @@ export default function Home() {
       setGuessHistory([])
       setPlayedMovies([])
     }
+  }
+
+  const skipMovie = () => {
+    if (!currentMovie) return
+
+    const historyEntry: GuessHistoryEntry = {
+      movieId: currentMovie.id,
+      movieTitle: currentMovie.title,
+      guess: "[Pulado]",
+      correct: false,
+      timestamp: Date.now(),
+      skipped: true,
+    }
+
+    setGuessHistory((prev) => [historyEntry, ...prev].slice(0, 20))
+
+    if (!playedMovies.includes(currentMovie.id)) {
+      setPlayedMovies([...playedMovies, currentMovie.id])
+    }
+
+    setGameOver(true)
+    setWasSkipped(true)
+    setIsCorrect(false)
   }
 
   if (loading) {
@@ -295,7 +319,7 @@ export default function Home() {
             <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
               <div className="flex items-center gap-2 text-destructive mb-2">
                 <AlertCircle className="h-5 w-5" />
-                <h3 className="font-medium">Incorreto!</h3>
+                <h3 className="font-medium">{wasSkipped ? "Filme Pulado" : "Incorreto!"}</h3>
               </div>
               <div className="flex gap-4">
                 <img
@@ -334,6 +358,16 @@ export default function Home() {
           {gameOver && (
             <Button onClick={nextMovie} className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground">
               Próximo Filme
+            </Button>
+          )}
+          {!gameOver && difficultyLevel === 1 && (
+            <Button
+              onClick={skipMovie}
+              variant="outline"
+              className="w-full border-primary/20 text-muted-foreground hover:bg-primary/5 flex items-center gap-2"
+            >
+              <SkipForward className="h-4 w-4" />
+              Pular Filme
             </Button>
           )}
         </CardFooter>
