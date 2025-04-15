@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Paleta de cores inspirada em Old Boy */
+    --background: 45 30% 98%;
+    --foreground: 84 40% 15%;
+
+    --card: 45 30% 98%;
+    --card-foreground: 84 40% 15%;
+
+    --popover: 45 30% 98%;
+    --popover-foreground: 84 40% 15%;
+
+    /* Âmbar/dourado como cor primária */
+    --primary: 36 100% 50%;
+    --primary-foreground: 45 30% 98%;
+
+    /* Verde oliva como cor secundária */
+    --secondary: 84 40% 30%;
+    --secondary-foreground: 45 30% 98%;
+
+    --muted: 45 20% 90%;
+    --muted-foreground: 84 10% 40%;
+
+    /* Verde mais escuro como cor de destaque */
+    --accent: 84 40% 20%;
+    --accent-foreground: 45 30% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 45 30% 98%;
+
+    --border: 45 30% 85%;
+    --input: 45 30% 85%;
+    --ring: 36 100% 50%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Versão escura da paleta Old Boy */
+    --background: 84 40% 10%;
+    --foreground: 45 30% 90%;
+
+    --card: 84 40% 12%;
+    --card-foreground: 45 30% 90%;
+
+    --popover: 84 40% 12%;
+    --popover-foreground: 45 30% 90%;
+
+    /* Âmbar/dourado mais escuro como primário no tema escuro */
+    --primary: 36 80% 45%;
+    --primary-foreground: 84 40% 10%;
+
+    /* Verde oliva mais claro como secundário no tema escuro */
+    --secondary: 84 30% 40%;
+    --secondary-foreground: 45 30% 90%;
+
+    --muted: 84 20% 20%;
+    --muted-foreground: 45 20% 70%;
+
+    --accent: 36 80% 35%;
+    --accent-foreground: 45 30% 90%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 45 30% 90%;
+
+    --border: 84 20% 25%;
+    --input: 84 20% 25%;
+    --ring: 36 80% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Estilos específicos para o jogo com a paleta Old Boy */
+.card-old-boy {
+  background: linear-gradient(to right, hsl(36, 100%, 50%, 0.05), hsl(84, 40%, 20%, 0.1));
+  border-color: hsl(36, 100%, 50%, 0.2);
+}
+
+.difficulty-badge-hard {
+  background-color: hsl(36, 100%, 50%);
+  color: hsl(45, 30%, 98%);
+}
+
+.difficulty-badge-medium {
+  background-color: hsl(60, 70%, 45%);
+  color: hsl(84, 40%, 15%);
+}
+
+.difficulty-badge-easy {
+  background-color: hsl(84, 40%, 30%);
+  color: hsl(45, 30%, 98%);
+}
