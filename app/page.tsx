@@ -183,7 +183,7 @@ export default function Home() {
       setPlayedMovies([])
     }
   }
-
+ 
   const skipMovie = () => {
     if (!currentMovie) return
 
@@ -360,6 +360,7 @@ export default function Home() {
               Próximo Filme
             </Button>
           )}
+          {/* Botão de pular filme - aparece apenas quando difficultyLevel é 1 (após o primeiro erro) */}
           {!gameOver && difficultyLevel === 1 && (
             <Button
               onClick={skipMovie}
